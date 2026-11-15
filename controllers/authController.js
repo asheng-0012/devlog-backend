@@ -136,4 +136,27 @@ const changePassword = async (req, res) => {
     }
 };
 
-module.exports = { signup, login, getMe, changePassword };
+// Update profile (token required)
+const updateProfile = async (req, res) => {
+    try {
+        const { name, email, bio, showOnLeaderboard } = req.body;
+
+        const user = await User.findById(req.user._id);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        if (name) user.name = name.trim();
+        if (email) user.email = email.toLowerCase().trim();
+        if (bio !== undefined) user.bio = bio.trim();
+        if (showOnLeaderboard !== undefined) user.showOnLeaderboard = Boolean(showOnLeaderboard);
+
+        await user.save();
+
+        res.status(200).json(userData(user));
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+module.exports = { signup, login, getMe, changePassword, updateProfile };
