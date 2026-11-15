@@ -3,18 +3,35 @@ const mongoose = require('mongoose');
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true
+        required: true,
+        trim: true
     },
     email: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        lowercase: true,
+        trim: true
     },
     password: {
         type: String,
-        required: true
+        required: true,
+        select: false
+    },
+    bio: {
+        type: String,
+        default: '',
+        maxlength: 160
+    },
+    avatar: {
+        type: String,
+        default: ''
+    },
+    showOnLeaderboard: {
+        type: Boolean,
+        default: true
     }
-});
+}, { timestamps: true });
 
 const user = mongoose.model('User', userSchema);
 
